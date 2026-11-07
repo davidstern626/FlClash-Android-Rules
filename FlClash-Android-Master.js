@@ -1,4 +1,4 @@
-/* FlClash Android Master v1.0.0 | 2026-10-18
+/* FlClash Android Master v1.0.1 | 2026-11-07
  * Public-safe routing only. No subscription URLs, node credentials or tokens.
  * Entry: main(config). Node inventory comes exclusively from Sub-Store.
  * Replaces routing/DNS fields instead of appending airport rules.
@@ -118,6 +118,8 @@ function main(input) {
     'GEOIP,private,DIRECT,no-resolve',
     'AND,((DST-PORT,443),(NETWORK,UDP)),REJECT',
     'RULE-SET,AdvertisingLite,广告拦截',
+    // Google Play uses this .cn API too; keep it ahead of the domestic bypass.
+    'DOMAIN-SUFFIX,googleapis.cn,谷歌服务',
     'GEOSITE,cn,DIRECT',
     'RULE-SET,StaticResources,静态资源',
     'DOMAIN-SUFFIX,truthsocial.com,Truth Social',
@@ -160,7 +162,10 @@ function main(input) {
     'default-nameserver': ['223.5.5.5', '119.29.29.29'],
     'proxy-server-nameserver': ['https://dns.alidns.com/dns-query', 'https://doh.pub/dns-query'],
     'direct-nameserver': ['https://dns.alidns.com/dns-query', 'https://doh.pub/dns-query'],
-    'nameserver-policy': { 'geosite:cn,private': ['https://dns.alidns.com/dns-query', 'https://doh.pub/dns-query'] },
+    'nameserver-policy': {
+      '+.googleapis.cn': ['https://1.1.1.1/dns-query#选择代理', 'https://8.8.8.8/dns-query#选择代理'],
+      'geosite:cn,private': ['https://dns.alidns.com/dns-query', 'https://doh.pub/dns-query'],
+    },
     nameserver: ['https://1.1.1.1/dns-query#选择代理', 'https://8.8.8.8/dns-query#选择代理'],
   };
   // This transform accepts a node snapshot only; never keep stale upstream providers.
